@@ -5,7 +5,26 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// datasource db {
+//   provider = "mysql"
+//   url      = env("DATABASE_URL")
+// }
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+ provider = "sqlite"
+ url      = "file:./dev.db"
+}
+
+model Category{
+  id                Int     @id     @default(autoincrement())
+  title             String
+  products          Product[]
+}
+
+model Product{
+  id                Int       @id     @default(autoincrement())
+  name              String
+  image             String?
+  approximateValue  Decimal   @default(0.0)
+  categoryId        Int
+  category          Category  @relation(fields: [categoryId],references: [id])
 }
