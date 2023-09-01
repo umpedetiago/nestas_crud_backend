@@ -6,17 +6,18 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
+import { Prisma } from '@prisma/client';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { ProductService } from './product.service';
-
+@UseGuards(AuthGuard)
 @Controller('product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Post()
-  create(@Body() createProductDto: CreateProductDto) {
+  create(@Body() createProductDto: Prisma.ProductCreateInput) {
     return this.productService.create(createProductDto);
   }
 
@@ -31,7 +32,10 @@ export class ProductController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateProductDto: Prisma.ProductUpdateInput,
+  ) {
     return this.productService.update(+id, updateProductDto);
   }
 
